@@ -4,15 +4,17 @@ app.controller('ConversationController', function() {
     this.messages = messages;
 });
 
-// envoi d'un message
 app.controller('MsgController', function() {
+  // envoi d'un message
 	this.addMessage = function(message) {
-		this.message.timestamp = "2015-02-27T16:00:00.222";
+		this.message.timestamp = new Date();
 		this.message.cid = "2";
 		this.message.is_participant = true;
    	messages.push(this.message);
    	this.message = {};
+    console.log(messages);
   }
+
 });
 
 app.directive("conversation", function(){
