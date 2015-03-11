@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="turing">
+<html ng-app="visitor">
   <head>
     <link rel="stylesheet" type="text/css" href="vendor/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="assets/app.css" />
@@ -8,11 +8,12 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Turing Test </title>
   </head>
-  <body ng-controller="ConversationController as conversation">
-  <div class="container">
+  <body>
+  <div ng-controller="StateController as stateCtrl" class="container">
     <h1>Turing</h1>
-    <h2>Bienvenue Visiteur !</h2>
-    <conversation></conversation>
+    <intro ng-show="stateCtrl.showButton"></intro>
+    <conversation ng-show="stateCtrl.showConversation"></conversation>
+    <result ng-show="stateCtlr.showResult"></result>
   </div>
   </body>
 </html>

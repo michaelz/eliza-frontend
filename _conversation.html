@@ -1,5 +1,5 @@
-<div id="conversation" class="msg-container  well">
-	<div ng-repeat="message in conversation.messages" class="message">
+<div ng-controller="ConversationController as conversationCtrl" id="conversation" class="msg-container well">
+	<div ng-repeat="message in conversationCtrl.messages" class="message">
 		<blockquote ng-class="{'blockquote-reverse' : message.is_participant }">
 			{{message.messageContent}}
 			<footer><strong ng-hide="message.is_participant">Opérateur à </strong>{{message.timestamp | date : 'HH:mm:ss'}}</footer>
