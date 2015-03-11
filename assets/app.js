@@ -1,5 +1,21 @@
-var app = angular.module('visitor', []);
+var app = angular.module('visitor', ['luegg.directives']);
 
+app.config(['$httpProvider', function ($httpProvider) {
+  delete $httpProvider.defaults.headers.common['X-Requested-With'];
+  $httpProvider.defaults.headers.post['Accept'] = 'application/json, text/javascript';
+  $httpProvider.defaults.headers.post['Content-Type'] = 'application/json; charset=utf-8';
+  $httpProvider.defaults.headers.post['Access-Control-Max-Age'] = '1728000';
+  $httpProvider.defaults.headers.common['Access-Control-Max-Age'] = '1728000';
+  $httpProvider.defaults.headers.common['Accept'] = 'application/json, text/javascript';
+  $httpProvider.defaults.headers.common['Content-Type'] = 'application/json; charset=utf-8';
+  $httpProvider.defaults.useXDomain = true;
+}]);
+
+
+var restServer = 'http://localhost:8080';
+var restPath = 'TuringREST/API/1.0';
+var restUrl = restServer+'/'+restPath;
+console.log(restUrl);
 // default state
 var state = "idle";
 // To load with json !
@@ -43,16 +59,33 @@ app.controller('StateController', function($http) {
 
   this.startConversation = function() {
     console.log("started conversation");
-    $http.post('http://10.10.0.20:8080/TuringREST/API/1.0/conversations', {"ai":false} )
-      .success(function(data, status, headers, config) {
+    $http({
+        url: restUrl+'/conversations/',
+        method: "POST",
+        data: {"ai":false},
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).success(function(data, status, headers, config) {
        console.log(data);
        console.log(status);
        console.log(headers);
-     }).error(function(data, status, headers, config) {
-      console.log("error");
-     });
+    }).error(function(data, status, headers, config) {
+      console.log(config);
+    });
+    $http({
+      url: restUrl+'/conversations/2/messages',
+      method: "GET"
+    }).success(function(data,status,headers,config) {
+      console.log(data);
+      for (var i = 0; i < data.length; i++) {
+        messages.push(data[i]);
+      };
+      messages.push(data);
+    }).error(function(data,status,headers,config) {
+      console.log(status);
+    });
   }
-
 });
 
 app.controller('ConversationController', function(){
@@ -73,9 +106,6 @@ app.controller('MsgController', function($http) {
   }
   // TODO: Chopper tous les messages avec un tick
   // Comment faire ?? mettre à jour la variable $messages avec la liste des messages d'une conversation, toutes les secondes.
-
-
-
 });
 
 /**
@@ -101,7 +131,7 @@ app.directive("result", function(){
     restrict: "E",
     templateUrl:"_result.html"
   };
-})
+});
 
 
 

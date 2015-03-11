@@ -1,4 +1,4 @@
-<div ng-controller="ConversationController as conversationCtrl" id="conversation" class="msg-container well">
+<div scroll-glue ng-controller="ConversationController as conversationCtrl" id="conversation" class="msg-container well">
 	<div ng-repeat="message in conversationCtrl.messages" class="message">
 		<blockquote ng-class="{'blockquote-reverse' : message.is_participant }">
 			{{message.messageContent}}
