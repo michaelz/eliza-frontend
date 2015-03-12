@@ -5,6 +5,7 @@
 			<footer><strong ng-hide="message.is_participant">Opérateur à </strong>{{message.timestamp | date : 'HH:mm:ss'}}</footer>
 		</blockquote>
 	</div>
+	<button class="btn btn-primary " ng-click="conversationCtrl.updateMessages()">UpdateMessages</button>
 </div>
 
 <form name="reviewForm" ng-controller="MsgController as msgCtrl" ng-submit="msgCtrl.addMessage(message)">
@@ -15,3 +16,4 @@
 	  <input type="submit" class="btn btn-primary pull-right" value="Envoyer le message" />
 	</fieldset>
 </form>
+	<button class="btn btn-primary " ng-click="stateCtrl.updateState('vote')">Stop conversation</button>

@@ -12,7 +12,7 @@ app.config(['$httpProvider', function ($httpProvider) {
 }]);
 
 
-var restServer = 'http://localhost:8080';
+var restServer = 'http://10.10.0.20:8080';
 var restPath = 'TuringREST/API/1.0';
 var restUrl = restServer+'/'+restPath;
 console.log(restUrl);
@@ -22,7 +22,13 @@ var state = "idle";
 var defaultmessage = "Bonjour ! Bienvenue dans cette conversation";
 var messages = [];
 
-app.controller('StateController', function($http) {
+
+
+/**
+ * State controller
+ */
+app.controller('StateController', function($scope, $http) {
+  $http.defaults.useXDomain = true;
   this.state = state;
   this.showButton = true;
 
@@ -36,16 +42,24 @@ app.controller('StateController', function($http) {
         case "running":
           this.showButton = false;
           this.showConversation = true;
+          this.showVote = false;
           this.showResult = false;
         break;
+        case "vote":
+          this.showButton = false;
+          this.showConversation = false;
+          this.showVote = true;
+          this.showResult = false;
         case "finished":
           this.showButton = false;
           this.showConversation = false;
+          this.showVote = false;
           this.showResult = true;
         break;
         default:
           this.showButton = true;
           this.showConversation = false;
+          this.showVote = false;
           this.showResult = false;
         break;
       }
@@ -55,6 +69,7 @@ app.controller('StateController', function($http) {
         this.startConversation();
       }
   }
+
 
 
   this.startConversation = function() {
@@ -67,45 +82,72 @@ app.controller('StateController', function($http) {
             'Content-Type': 'application/json'
         }
     }).success(function(data, status, headers, config) {
-       console.log(data);
-       console.log(status);
-       console.log(headers);
+
+       $scope.cid = data.value.match("[0-9]+$")[0];
+
+
     }).error(function(data, status, headers, config) {
       console.log(config);
     });
+
+  }
+
+  this.launchVote = function() {
+    this.updateState("vote");
+    console.log("launched voting system");
+  }
+});
+
+/**
+ * Conversation controller
+ */
+
+app.controller('ConversationController', function($scope,$http){
+  this.messages = messages;
+  $scope.timer = 0;
+  // mettre à jour les messages // à modifier !!
+  this.updateMessages = function() {
     $http({
-      url: restUrl+'/conversations/2/messages',
-      method: "GET"
-    }).success(function(data,status,headers,config) {
-      console.log(data);
-      for (var i = 0; i < data.length; i++) {
-        messages.push(data[i]);
-      };
-      messages.push(data);
-    }).error(function(data,status,headers,config) {
-      console.log(status);
+        url: restUrl+'/conversations/'+ $scope.cid +'/messages',
+        method: "GET"
+      }).success(function(data,status,headers,config) {
+        for (var i = 0; i < data.length; i++) {
+          messages.push(data[i]);
+        };
+      }).error(function(data,status,headers,config) {
+        console.log("error"+status);
     });
   }
 });
 
-app.controller('ConversationController', function(){
-    this.messages = messages;
-});
 
+/**
+ * Message controller
+ */
 
+app.controller('MsgController', function($scope, $http) {
 
-
-app.controller('MsgController', function($http) {
   // envoi d'un message
 	this.addMessage = function(message) {
-		this.message.timestamp = new Date();
-		this.message.cid = "2";
-		this.message.is_participant = true;
-   	messages.push(this.message); // ici: faire le http post
+
+    $http({
+        url: restUrl+'/messages/'+ $scope.cid,
+        method: "POST",
+        data: {
+          "is_participant": true,
+          "messageContent": this.message.messageContent,
+          },
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).success(function(data, status, headers, config) {
+      console.log("ok, message added");
+    }).error(function(data, status, headers, config) {
+        console.log("error occured");
+    });
+   	//messages.push(this.message);
    	this.message = {};
   }
-  // TODO: Chopper tous les messages avec un tick
-  // Comment faire ?? mettre à jour la variable $messages avec la liste des messages d'une conversation, toutes les secondes.
 });
 
 /**
@@ -133,6 +175,12 @@ app.directive("result", function(){
   };
 });
 
+app.directive("vote", function() {
+  return {
+    restrict: "E",
+    templateUrl:"_vote.html"
+  }
+});
 
 
 
