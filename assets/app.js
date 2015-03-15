@@ -322,14 +322,14 @@ app.controller('VoteController', function($scope, $http) {
 app.directive("intro", function(){
   return {
     restrict: "E",
-    templateUrl:"_1_intro.html"
+    templateUrl:"assets/views/1_intro.html"
   };
 })
 
 app.directive("conversation", function(){
   return {
     restrict: "E",
-    templateUrl:"_2_conversation.html"
+    templateUrl:"assets/views/2_conversation.html"
   };
 });
 
@@ -337,14 +337,14 @@ app.directive("conversation", function(){
 app.directive("vote", function() {
   return {
     restrict: "E",
-    templateUrl:"_3_vote.html"
+    templateUrl:"assets/views/3_vote.html"
   }
 });
 
 app.directive("result", function(){
   return {
     restrict: "E",
-    templateUrl:"_4_result.html"
+    templateUrl:"assets/views/4_result.html"
   };
 });
 

@@ -34,19 +34,8 @@ app.factory('ConversationService', function($http) {
 	}
 	return conversationService;
 });
-/*
-app.factory('MessagesService',function($http) {
-	// Needs $scope.cid to be defined in order to work.
-	var messagesService = {
-		getAllMessages: function() {
-			return $http.get(restUrl+'conversations/'+ $scope.cid +'/messages').then(function(response) {
-				return response.data;
-			});
-		}
-	}
-	return messagesService;
-});
-*/
+
+
 ///////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////CONTROLLERS///////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -206,6 +195,6 @@ app.controller('MsgController',
 app.directive("conversation", function(){
   return {
     restrict: "E",
-    templateUrl:"_conversation.html"
+    templateUrl:"conversation.html"
   };
 });
