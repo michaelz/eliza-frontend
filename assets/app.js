@@ -235,8 +235,7 @@ app.controller('StateController', function($scope, $http, $timeout, operatorServ
  */
 
 app.controller('MsgController', function($scope, $http) {
-
-
+  MsgController = this;
   // envoi d'un message
 	this.addMessage = function(message) {
     $http({
